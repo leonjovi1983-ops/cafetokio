@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cafe Tokio — La Plata</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =========================================
+       VARIABLES & RESET
+    ========================================= */
+    :root {
+      --black:   #080808;
+      --white:   #f4f4ef;
+      --gray-1:  #161616;
+      --gray-2:  #242424;
+      --gray-3:  #7a7a7a;
+      --gray-4:  #bebebe;
+      --red:     #c0392b;       /* used for accents & Japan flag */
+      --arg-blue:#74acdf;       /* Argentina flag light blue */
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a   { text-decoration: none; color: inherit; }
+    ul  { list-style: none; }
+
+    /* =========================================
+       LOGO — banderas SVG inline
+    ========================================= */
+
+    /* Contenedor del logo (texto + banderas) */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      letter-spacing: 0.1em;
+      color: var(--white);
+      white-space: nowrap;
+    }
+
+    /* Cada mini-bandera */
+    .flag {
+      width: 22px;
+      height: 15px;
+      display: inline-flex;
+      flex-shrink: 0;
+      overflow: hidden;
+      border-radius: 2px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.12);
+    }
+
+    /* Texto de la marca */
+    .logo-text { letter-spacing: 0.08em; }
+    .logo-text span { color: var(--red); }
+
+    /* =========================================
+       HEADER / NAV
+    ========================================= */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 5%;
+      background: rgba(8,8,8,0.93);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--gray-2);
+    }
+
+    nav ul {
+      display: flex;
+      gap: 2.5rem;
+    }
+    nav a {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--white); }
+
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+    }
+    .menu-toggle span {
+      width: 24px; height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+    }
+
+    /* =========================================
+       HERO
+    ========================================= */
+    #inicio {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 80px 5% 9vh;
+      position: relative;
+      overflow: hidden;
+      background: var(--black);
+    }
+
+    /* Grain overlay */
+    #inicio::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      background-size: 200px;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    /* Diagonal accent — mezcla arg-blue y red */
+    #inicio::after {
+      content: '';
+      position: absolute;
+      top: -10%; right: -8%;
+      width: 36vw; height: 115vh;
+      background: linear-gradient(160deg, var(--arg-blue) 0%, var(--red) 100%);
+      opacity: 0.045;
+      transform: rotate(14deg);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+      margin-bottom: 1.1rem;
+      position: relative;
+    }
+
+    .hero-eyebrow strong { color: var(--red); font-weight: 500; }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(4.5rem, 11.5vw, 9.5rem);
+      line-height: 0.91;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--white);
+      position: relative;
+      max-width: 16ch;
+    }
+    .hero-title em {
+      font-style: normal;
+      color: var(--red);
+    }
+
+    .hero-sub {
+      margin-top: 2rem;
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--gray-3);
+      max-width: 40ch;
+      position: relative;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 2.6rem;
+      padding: 0.9rem 2.5rem;
+      font-family: var(--font-body);
+      font-size: 0.76rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      border: 1.5px solid var(--white);
+      color: var(--white);
+      transition: background 0.25s, color 0.25s;
+    }
+    .btn:hover { background: var(--white); color: var(--black); }
+    .btn-red { border-color: var(--red); color: var(--red); }
+    .btn-red:hover { background: var(--red); color: var(--white); }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.8rem; right: 5%;
+      font-size: 0.66rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+      writing-mode: vertical-rl;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .scroll-hint::after {
+      content: '';
+      display: block;
+      width: 1px; height: 38px;
+      background: var(--gray-3);
+    }
+
+    /* =========================================
+       SHARED SECTION
+    ========================================= */
+    section { padding: 7rem 5%; }
+
+    .section-tag {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 0.9rem;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      line-height: 0.93;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+    .divider {
+      width: 44px; height: 2px;
+      background: var(--red);
+      margin-bottom: 2rem;
+    }
+
+    /* =========================================
+       SOBRE NOSOTROS
+    ========================================= */
+    #nosotros {
+      background: var(--gray-1);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .nosotros-text p {
+      color: var(--gray-4);
+      font-weight: 300;
+      line-height: 1.85;
+      margin-bottom: 1.2rem;
+      max-width: 46ch;
+    }
+
+    .founders {
+      display: flex;
+      gap: 1.4rem;
+      margin-top: 2rem;
+    }
+    .founder-card {
+      flex: 1;
+      border: 1px solid var(--gray-2);
+      padding: 1.3rem;
+      position: relative;
+    }
+    .founder-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--red);
+    }
+    .founder-card .name {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+    }
+    .founder-card .role {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+      margin-top: 0.2rem;
+    }
+
+    .nosotros-visual { position: relative; }
+    .nosotros-img-frame {
+      width: 100%;
+      aspect-ratio: 4/5;
+      background: var(--gray-2);
+      overflow: hidden;
+    }
+    .nosotros-img-frame img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: grayscale(0%);
+      opacity: 0.65;
+    }
+    .corner-accent {
+      position: absolute;
+      bottom: -1.4rem; right: -1.4rem;
+      width: 55px; height: 55px;
+      background: var(--red);
+    }
+
+    /* =========================================
+       PRODUCTOS
+    ========================================= */
+    #productos { background: var(--black); }
+
+    .productos-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 3.5rem;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .product-card { position: relative; overflow: hidden; cursor: pointer; }
+    .product-img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: var(--gray-2);
+      overflow: hidden;
+      position: relative;
+    }
+    .product-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: grayscale(30%);
+      transition: transform 0.5s ease, filter 0.4s;
+    }
+    .product-card:hover .product-img img {
+      transform: scale(1.05);
+      filter: grayscale(0%);
+    }
+    .product-tag {
+      position: absolute;
+      top: 1rem; left: 1rem;
+      background: var(--black);
+      padding: 0.28rem 0.75rem;
+      font-size: 0.66rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .product-info { padding: 1.1rem 0.2rem; }
+    .product-info .cat {
+      font-size: 0.66rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+    }
+    .product-info .p-name {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      letter-spacing: 0.06em;
+      margin-top: 0.2rem;
+    }
+    .product-info .p-price {
+      font-size: 0.88rem;
+      color: var(--gray-4);
+      margin-top: 0.35rem;
+    }
+
+    /* =========================================
+       PERSONALIZADAS
+    ========================================= */
+    #personalizadas {
+      background: var(--gray-1);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .custom-steps {
+      margin-top: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .step { display: flex; gap: 1.4rem; align-items: flex-start; }
+    .step-num {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      color: var(--red);
+      line-height: 1;
+      min-width: 2rem;
+    }
+    .step-text strong {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+    .step-text p { font-size: 0.88rem; font-weight: 300; color: var(--gray-4); }
+
+    .custom-visual { position: relative; }
+    .custom-img-frame {
+      width: 100%;
+      aspect-ratio: 1/1;
+      background: var(--gray-2);
+      overflow: hidden;
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .custom-img-frame img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      filter: grayscale(0%);
+      opacity: 0.45;
+    }
+    .overlay-letter {
+      position: absolute;
+      font-family: var(--font-display);
+      font-size: 18rem;
+      color: var(--white);
+      opacity: 0.04;
+      pointer-events: none;
+      user-select: none;
+    }
+    .custom-cta { margin-top: 2rem; }
+
+    /* =========================================
+       FOOTER
+    ========================================= */
+    footer {
+      background: var(--gray-1);
+      border-top: 1px solid var(--gray-2);
+      padding: 4rem 5% 2.5rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    .footer-brand .logo { font-size: 2rem; margin-bottom: 1rem; }
+    .footer-brand p {
+      font-size: 0.86rem;
+      font-weight: 300;
+      color: var(--gray-3);
+      max-width: 34ch;
+      line-height: 1.75;
+    }
+    .footer-col h4 {
+      font-size: 0.7rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--gray-4);
+      margin-bottom: 1.2rem;
+    }
+    .footer-col ul li { margin-bottom: 0.6rem; }
+    .footer-col ul li a {
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: var(--gray-3);
+      transition: color 0.2s;
+    }
+    .footer-col ul li a:hover { color: var(--white); }
+
+    .social-links { display: flex; flex-direction: column; gap: 0.65rem; }
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 0.86rem;
+      font-weight: 300;
+      color: var(--gray-3);
+      transition: color 0.2s;
+    }
+    .social-link:hover { color: var(--white); }
+    .social-icon {
+      width: 30px; height: 30px;
+      border: 1px solid var(--gray-2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem;
+      transition: border-color 0.2s, background 0.2s;
+      flex-shrink: 0;
+    }
+    .social-link:hover .social-icon {
+      border-color: var(--red);
+      background: var(--red);
+      color: var(--white);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--gray-2);
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.73rem;
+      color: var(--gray-3);
+      letter-spacing: 0.07em;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    /* =========================================
+       RESPONSIVE
+    ========================================= */
+    @media (max-width: 900px) {
+      #nosotros, #personalizadas {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 620px) {
+      nav ul        { display: none; }
+      .menu-toggle  { display: flex; }
+      .hero-title   { font-size: clamp(3.5rem, 15vw, 6rem); }
+      .products-grid { grid-template-columns: 1fr; }
+      .founders     { flex-direction: column; }
+      .footer-grid  { grid-template-columns: 1fr; }
+      .nosotros-visual, .custom-visual { display: none; }
+      .section-title { font-size: clamp(2.2rem, 9vw, 3.5rem); }
+      .logo { font-size: 1.35rem; gap: 0.4rem; }
+      .flag { width: 18px; height: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== HEADER ===================== -->
+  <header>
+
+    <a href="#inicio" class="logo">
+
+      <!-- Bandera Argentina (SVG inline) -->
+      <span class="flag" title="Argentina">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20" width="22" height="15">
+          <!-- Franja celeste superior -->
+          <rect width="30" height="6.66" y="0"    fill="#74acdf"/>
+          <!-- Franja blanca central -->
+          <rect width="30" height="6.68" y="6.66" fill="#ffffff"/>
+          <!-- Franja celeste inferior -->
+          <rect width="30" height="6.66" y="13.34" fill="#74acdf"/>
+          <!-- Sol de Mayo (simplificado) -->
+          <circle cx="15" cy="10" r="2.4" fill="#f6b40e" stroke="#85340a" stroke-width="0.3"/>
+          <!-- Rayos del sol -->
+          <g stroke="#f6b40e" stroke-width="0.55" transform="translate(15,10)">
+            <line x1="0" y1="-3.8" x2="0" y2="-5.2"/>
+            <line x1="0" y1="3.8"  x2="0" y2="5.2"/>
+            <line x1="-3.8" y1="0" x2="-5.2" y2="0"/>
+            <line x1="3.8"  y1="0" x2="5.2"  y2="0"/>
+            <line x1="-2.7" y1="-2.7" x2="-3.7" y2="-3.7"/>
+            <line x1="2.7"  y1="-2.7" x2="3.7"  y2="-3.7"/>
+            <line x1="-2.7" y1="2.7"  x2="-3.7" y2="3.7"/>
+            <line x1="2.7"  y1="2.7"  x2="3.7"  y2="3.7"/>
+          </g>
+        </svg>
+      </span>
+
+      <span class="logo-text">Cafe<span>.</span>Tokio</span>
+
+      <!-- Bandera Japón (SVG inline) -->
+      <span class="flag" title="Japón">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20" width="22" height="15">
+          <rect width="30" height="20" fill="#ffffff"/>
+          <circle cx="15" cy="10" r="6" fill="#bc002d"/>
+        </svg>
+      </span>
+
+    </a>
+
+    <nav>
+      <ul>
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#nosotros">Nosotros</a></li>
+        <li><a href="#productos">Productos</a></li>
+        <li><a href="#personalizadas">Custom</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+
+    <div class="menu-toggle" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </div>
+
+  </header>
+
+
+  <!-- ===================== HERO ===================== -->
+  <section id="inicio">
+
+    <span class="hero-eyebrow">
+      La Plata, Buenos Aires
+    </span>
+
+    <h1 class="hero-title">
+      Expresá<br>
+      quién<br>
+      <em>sos.</em>
+    </h1>
+
+    <p class="hero-sub">
+      Remeras con identidad. Diseños únicos que hablan antes que vos.
+      Hechas para durar, pensadas para destacar.
+    </p>
+
+    <a href="#productos" class="btn">Ver colección</a>
+
+    <span class="scroll-hint">Scroll</span>
+
+  </section>
+
+
+  <!-- ===================== PRODUCTOS ===================== -->
+  <section id="productos">
+
+    <div class="productos-header">
+      <div>
+        <p class="section-tag">Colección</p>
+        <h2 class="section-title">Nuestras<br>remeras.</h2>
+      </div>
+      <a href="#contacto" class="btn">Ver todo</a>
+    </div>
+
+    <div class="products-grid">
+
+      <!-- Producto 1 -->
+      <div class="product-card">
+        <div class="product-img">
+          <img
+            src="pescado.jpg"
+            alt="Remera negra básica"
+          />
+          <span class="product-tag">New</span>
+        </div>
+        <div class="product-info">
+          <span class="cat">Edición especial</span>
+          <div class="p-name">Tokio Pescado Rabioso</div>
+          <div class="p-price">$21.000</div>
+        </div>
+      </div>
+
+      <!-- Producto 2 -->
+      <div class="product-card">
+        <div class="product-img">
+          <img
+            src="guns.jpg"
+            alt="Remera estampada gráfica"
+          />
+          <span class="product-tag">Popular</span>
+        </div>
+        <div class="product-info">
+          <span class="cat">Edición especial</span>
+          <div class="p-name">Tokio Guns N' Roses</div>
+          <div class="p-price">$21.000</div>
+        </div>
+      </div>
+
+      <!-- Producto 3 -->
+      <div class="product-card">
+        <div class="product-img">
+          <img
+            src="nirvana.jpg"
+            alt="Remera blanca oversize"
+          />
+          <span class="product-tag">—</span>
+        </div>
+        <div class="product-info">
+          <span class="cat">Edición especial</span>
+          <div class="p-name">Tokio Nirvana</div>
+          <div class="p-price">$21.000</div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================== PERSONALIZADAS ===================== -->
+  <section id="personalizadas">
+
+    <div class="custom-visual">
+      <div class="custom-img-frame">
+        <img
+          src="redo.jpg"
+          alt="Remeras personalizadas"
+        />
+        <span class="overlay-letter">T</span>
+      </div>
+    </div>
+
+    <div>
+      <p class="section-tag">Servicio</p>
+      <h2 class="section-title">Diseño a<br>medida.</h2>
+      <div class="divider"></div>
+
+      <p style="color: var(--gray-4); font-weight: 300; max-width: 42ch;">
+        ¿Tenés una idea en la cabeza? Nosotros la hacemos realidad.
+        Trabajamos con vos desde el concepto hasta el producto terminado.
+      </p>
+
+      <div class="custom-steps">
+        <div class="step">
+          <span class="step-num">01</span>
+          <div class="step-text">
+            <strong>Contactanos</strong>
+            <p>Contanos tu idea o mandanos una referencia. Sin compromiso.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">02</span>
+          <div class="step-text">
+            <strong>Diseñamos juntos</strong>
+            <p>Creamos un boceto digital para que aprobés antes de imprimir.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">03</span>
+          <div class="step-text">
+            <strong>Te lo entregamos</strong>
+            <p>Producción local con envíos a todo el país.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="custom-cta">
+        <a href="#contacto" class="btn btn-red">Pedir presupuesto</a>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ===================== SOBRE NOSOTROS ===================== -->
+  <section id="nosotros">
+
+    <div class="nosotros-text">
+      <p class="section-tag">Sobre nosotros</p>
+      <h2 class="section-title">2 hermanos,<br>una marca.</h2>
+      <div class="divider"></div>
+
+      <p>
+        Cafe Tokio nació en La Plata con una idea simple: hacer ropa que te represente.
+        Cada remera que producimos es el resultado de horas de trabajo, buen gusto
+        y materiales que aguantan lo que el día te ponga adelante.
+      </p>
+      <p>
+        No somos una marca genérica. Somos dos hermanos con ganas de crear algo real,
+        desde La Plata para el mundo.
+      </p>
+
+      <div class="founders">
+        <div class="founder-card">
+          <div class="name">León Castro</div>
+          <div class="role">Cofundador</div>
+        </div>
+        <div class="founder-card">
+          <div class="name">Valentín Castro</div>
+          <div class="role">Cofundador</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nosotros-visual">
+      <div class="nosotros-img-frame">
+        <img
+          src="cafetokio.jpeg"
+          alt="Cafe Tokio — Equipo"
+        />
+      </div>
+      <div class="corner-accent"></div>
+    </div>
+
+  </section>
+
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer id="contacto">
+
+    <div class="footer-grid">
+
+      <div class="footer-brand">
+        <a href="#inicio" class="logo" style="margin-bottom:1rem; display:inline-flex;">
+          <span class="flag">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20" width="22" height="15">
+              <rect width="30" height="6.66" y="0"    fill="#74acdf"/>
+              <rect width="30" height="6.68" y="6.66" fill="#ffffff"/>
+              <rect width="30" height="6.66" y="13.34" fill="#74acdf"/>
+              <circle cx="15" cy="10" r="2.4" fill="#f6b40e" stroke="#85340a" stroke-width="0.3"/>
+              <g stroke="#f6b40e" stroke-width="0.55" transform="translate(15,10)">
+                <line x1="0" y1="-3.8" x2="0" y2="-5.2"/>
+                <line x1="0" y1="3.8"  x2="0" y2="5.2"/>
+                <line x1="-3.8" y1="0" x2="-5.2" y2="0"/>
+                <line x1="3.8"  y1="0" x2="5.2"  y2="0"/>
+                <line x1="-2.7" y1="-2.7" x2="-3.7" y2="-3.7"/>
+                <line x1="2.7"  y1="-2.7" x2="3.7"  y2="-3.7"/>
+                <line x1="-2.7" y1="2.7"  x2="-3.7" y2="3.7"/>
+                <line x1="2.7"  y1="2.7"  x2="3.7"  y2="3.7"/>
+              </g>
+            </svg>
+          </span>
+          <span class="logo-text">Cafe<span style="color:var(--red)">.</span>Tokio</span>
+          <span class="flag">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20" width="22" height="15">
+              <rect width="30" height="20" fill="#ffffff"/>
+              <circle cx="15" cy="10" r="6" fill="#bc002d"/>
+            </svg>
+          </span>
+        </a>
+        <p>
+          Remeras con identidad.<br>
+          La Plata, Buenos Aires, Argentina.<br>
+          Fundada por León y Valentín Castro.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#nosotros">Nosotros</a></li>
+          <li><a href="#productos">Productos</a></li>
+          <li><a href="#personalizadas">Personalizadas</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Seguinos</h4>
+        <div class="social-links">
+          <a href="#" class="social-link">
+            <span class="social-icon">IG</span>@cafetokio
+          </a>
+          <a href="#" class="social-link">
+            <span class="social-icon">TK</span>@cafetokio
+          </a>
+          <a href="#" class="social-link">
+            <span class="social-icon">WA</span>Escribinos
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2025 Cafe Tokio — Todos los derechos reservados.</span>
+      <span>La Plata, Buenos Aires, AR</span>
+    </div>
+
+  </footer>
+
+</body>
+</html>
